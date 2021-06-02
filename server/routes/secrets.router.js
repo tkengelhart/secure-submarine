@@ -6,9 +6,10 @@ const {
 } = require('../modules/authentication-middleware');
 
 router.get('/', rejectUnauthenticated, (req, res) => {
-  if (req.user.id === 1)
-    // what is the value of req.user????
-    console.log('req.user:', req.user);
+  // if (req.user.id === 1)
+  // what is the value of req.user????
+  console.log('req.user:', req.user);
+  //create query to limit access to secrets page - in order to see secrets level needs to be less than user clearance level 
   let queryText = `SELECT * FROM "secret" WHERE "secrecy_level" <= $1;`;
   pool.query(queryText, [req.user.clearance_level])
     .then((results) => res.send(results.rows))
@@ -18,6 +19,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     });
 });
 
+// don't need a sep. route can do it in one above
 // router.get('/', rejectUnauthenticated, (req, res) => {
 //   if (req.user.secrecy_level <= 10) {
 //     res.status(403).send('You need to be an admin to see this');
